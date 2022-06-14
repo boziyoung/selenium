@@ -10,13 +10,42 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
+class Webdriver:
+    __instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if not cls.__instance:
+            options = webdriver.ChromeOptions()
+            # 忽略https证书错误
+            options.add_argument('--ignore-certificate-errors')
+            # 忽略其他无关日志错误
+            options.add_experimental_option("excludeSwitches", ['enable-automation', 'enable-logging'])
+            cls.__instance = webdriver.Chrome(options=options)
+        return cls.__instance
+
+
 class Tool:
+    __instance = None       # 这个属性用来判断程序全局是否已经存在这个 class 的实例
+
+    def __new__(cls, *args, **kwargs):
+        if cls.__instance is None:
+            cls.__instance = super().__new__(cls)
+        return cls.__instance
+
     def __init__(self):
         """
         初始化浏览器
         """
-        self.driver = webdriver.Chrome()
+        # if Tool.__init_flag:
+        #     return
+        # print("start initial the class obj")
+
+        self.driver = Webdriver()
+        # self.driver.set_window_size(1080,720)
         self.driver.maximize_window()
+
+        # Tool.__init_flag = True
+
 
     def open_url(self, url):
         """
