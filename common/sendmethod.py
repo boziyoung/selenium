@@ -8,9 +8,9 @@ class SendMethod:
         self.url = url
 
     def send_method(self, **kwargs):
-        if self.method == 'get' or 'delete':
+        if self.method.lower() == 'get' or 'delete':
             response = requests.request(method=self.method, url=self.url, **kwargs)
-        elif self.method == 'post' or 'put':
+        elif self.method.lower() == 'post' or 'put':
             response = requests.request(method=self.method, url=self.url, **kwargs)
         else:
             print('请求方式错误')
